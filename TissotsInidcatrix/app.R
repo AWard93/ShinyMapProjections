@@ -16,7 +16,7 @@ library(rworldxtra)
 library(tibble)
 
 projections <- tribble(~"projection", ~"code",
-                          "Orthographic", "+proj=ortho +lat_0=50 +lon_0 = 0",
+                          "Orthographic", "+proj=ortho +lat_0=50 +lon_0 = 310",
                           "wgs84", "4326",
                           "Mercator", "3857",
                           "Interrupted Goode Homolosine","+proj=igh",
@@ -58,9 +58,11 @@ ui <- fluidPage(
         selectInput("projection", 
                     "Select a projection",
                     choices = projections$projection,
-                    selected = "Orthographic")
-      ),
-      
+                    selected = "Orthographic"),
+        checkboxInput("tissots", 
+                      "Display Tissot's indicatrix",
+                      value = TRUE)
+       ),
       mainPanel(
         plotOutput("mapPlot")
       )
@@ -84,10 +86,25 @@ if(input$projection == "wgs84"){
     proj_code <- projections$code[projections$projection == input$projection]
     world_ <- world
 }
-      ggplot()+
-      geom_sf(data = world_)+
-      geom_sf(data = tissots)+
-      coord_sf(crs = proj_code)
+  
+if(input$tissots == TRUE){
+  tis_fill <- "blue"
+  tis_colour <- "black"
+}else{
+  tis_fill <- NA
+  tis_colour <- NA
+} 
+  
+    ggplot()+
+      geom_sf(data = world_,
+              fill = "darkgreen")+
+            geom_sf(data = tissots,
+              fill= tis_fill,
+              colour = tis_colour)+        
+      coord_sf(crs = proj_code)+
+      theme(panel.background = element_rect(color = "black"))
+    
+   
  })
 
 output$mapPlot <- renderPlot({print(reactive_map())})
