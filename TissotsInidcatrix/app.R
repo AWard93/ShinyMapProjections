@@ -1,4 +1,3 @@
-#
 # This is a Shiny web application. You can run the application by clicking
 # the 'Run App' button above.
 #
@@ -7,7 +6,9 @@
 #    https://shiny.posit.co/
 #
 
+
 library(shiny)
+library(shinyWidgets)
 library(ggplot2)
 library(sf)
 library(dplyr)
@@ -47,9 +48,11 @@ ggplot()+
   geom_sf(data = tissots)+
   coord_sf(crs = "+proj=vandg4")
 
+#background <- "ghostwhite"
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
+    #setBackgroundColor(background),
     # Application title
     titlePanel("Exploring map projections using Tissot's Indicatix"),
 
@@ -63,7 +66,7 @@ ui <- fluidPage(
                       "Display Tissot's indicatrix",
                       value = TRUE)
        ),
-      mainPanel(
+     mainPanel(
         plotOutput("mapPlot")
       )
     )
